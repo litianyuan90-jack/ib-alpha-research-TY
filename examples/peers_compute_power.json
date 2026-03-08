@@ -1,0 +1,32 @@
+[
+  {
+    "name": "润泽科技",
+    "ticker": "300442.SZ",
+    "theme": "AIDC",
+    "pe_ttm": 30.6
+  },
+  {
+    "name": "数据港",
+    "ticker": "603881.SH",
+    "theme": "IDC",
+    "pe_ttm": 45.0
+  },
+  {
+    "name": "奥飞数据",
+    "ticker": "300738.SZ",
+    "theme": "IDC",
+    "pe_ttm": 137.0
+  },
+  {
+    "name": "中际旭创",
+    "ticker": "300308.SZ",
+    "theme": "光模块",
+    "pe_ttm": 35.0
+  },
+  {
+    "name": "浪潮信息",
+    "ticker": "000977.SZ",
+    "theme": "服务器",
+    "pe_ttm": 32.0
+  }
+]

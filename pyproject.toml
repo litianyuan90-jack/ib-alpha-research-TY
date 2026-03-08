@@ -1,0 +1,17 @@
+[project]
+name = "ib-alpha-agent"
+version = "3.0.0"
+description = "Modular AI equity research agent scaffold"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.30.0",
+  "python-dotenv>=1.0.1",
+  "pydantic>=2.7.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
