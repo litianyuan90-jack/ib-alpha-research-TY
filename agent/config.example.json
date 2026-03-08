@@ -1,0 +1,5 @@
+{
+  "model": "gpt-5",
+  "output_dir": "outputs",
+  "language": "zh-CN"
+}
