@@ -1,117 +1,57 @@
-# API Documentation
+# Interface Documentation
 
-## Overview
-This document provides comprehensive API documentation for the IB Alpha Research system. It includes all available endpoints, their parameters, expected responses, and usage examples.
+## Scope
+IB Alpha Agent currently exposes a local Python / CLI research interface. It does **not** provide the HTTP user CRUD endpoints previously described in this file.
 
-## Endpoints
+Repository behavior is governed by:
+- `AGENTS.md` for autonomy, clarification, approval, and completion;
+- `SKILL.md` for canonical equity-research methodology.
 
-### 1. Get User Information
-- **Endpoint:** `/api/users/{id}`  
-- **Method:** `GET`  
-- **Description:** Fetches user details by user ID.
+## CLI
 
-#### Parameters:
-- `id` (path) - The ID of the user to fetch.
-
-#### Responses:
-- **200 OK**  
-  ```json
-  {
-    "id": "123",
-    "name": "John Doe",
-    "email": "john@example.com"
-  }
-  ```
-- **404 Not Found**  
-  ```json
-  { "error": "User not found" }
-  ```
-
-#### Usage Example:
+### Research with autonomous read-only public research
 ```bash
-curl -X GET http://api.example.com/api/users/123
+python -m ib_alpha_agent.cli research \
+  --company "润泽科技" \
+  --ticker "300442.SZ"
 ```
 
-### 2. Create New User
-- **Endpoint:** `/api/users`  
-- **Method:** `POST`  
-- **Description:** Creates a new user in the system.
-
-#### Parameters:
-- `name` (body) - The name of the user.
-- `email` (body) - The email of the user.
-
-#### Request Body Example:
-```json
-{
-  "name": "Jane Doe",
-  "email": "jane@example.com"
-}
-```
-
-#### Responses:
-- **201 Created**  
-  ```json
-  {
-    "id": "124",
-    "name": "Jane Doe",
-    "email": "jane@example.com"
-  }
-  ```
-
-#### Usage Example:
+### Research with optional manual inputs
 ```bash
-curl -X POST http://api.example.com/api/users -H "Content-Type: application/json" -d '{"name": "Jane Doe", "email": "jane@example.com"}'
+python -m ib_alpha_agent.cli research \
+  --company "润泽科技" \
+  --ticker "300442.SZ" \
+  --facts-file examples/facts_ruanze.json \
+  --peers-file examples/peers_compute_power.json
 ```
 
-### 3. Update User Information
-- **Endpoint:** `/api/users/{id}`  
-- **Method:** `PUT`  
-- **Description:** Updates information for an existing user.
-
-#### Parameters:
-- `id` (path) - The ID of the user to update.
-- `name` (body) - The new name of the user.
-- `email` (body) - The new email of the user.
-
-#### Request Body Example:
-```json
-{
-  "name": "Jane Smith",
-  "email": "jane.smith@example.com"
-}
-```
-
-#### Responses:
-- **200 OK**  
-  ```json
-  {
-    "id": "124",
-    "name": "Jane Smith",
-    "email": "jane.smith@example.com"
-  }
-  ```
-
-#### Usage Example:
+### Disable public web research
 ```bash
-curl -X PUT http://api.example.com/api/users/124 -H "Content-Type: application/json" -d '{"name": "Jane Smith", "email": "jane.smith@example.com"}'
+python -m ib_alpha_agent.cli research \
+  --company "润泽科技" \
+  --ticker "300442.SZ" \
+  --no-web-search
 ```
 
-### 4. Delete User
-- **Endpoint:** `/api/users/{id}`  
-- **Method:** `DELETE`  
-- **Description:** Deletes a user from the system.
+## Python entry points
 
-#### Parameters:
-- `id` (path) - The ID of the user to delete.
+### `ib_alpha_agent.models.FactsPack`
+Represents the target company and optional manually supplied facts.
 
-#### Responses:
-- **204 No Content**  
+### `ib_alpha_agent.config.AgentConfig`
+Controls model, output directory, reasoning effort, and whether read-only public web research is enabled.
 
-#### Usage Example:
-```bash
-curl -X DELETE http://api.example.com/api/users/124
-```
+### `ib_alpha_agent.orchestrator.run_research(facts, peers, cfg)`
+Runs the canonical research flow and returns a `ResearchOutput`.
 
-## Conclusion
-This document provides a comprehensive overview of the available API endpoints for the IB Alpha Research system. Please refer to each section for detailed information on endpoints, expected parameters, and response formats.
+### `ib_alpha_agent.orchestrator.assess_completion(body, facts, web_research_enabled)`
+Applies structural quality checks and returns:
+- `COMPLETE`
+- `COMPLETE_WITH_GAPS`
+- `BLOCKED`
+
+### `ib_alpha_agent.reporting.render_report(output, output_dir)`
+Writes the local Markdown research report, including status, gaps, and quality checks.
+
+## External-action boundary
+The current research interface performs analysis and may use read-only public web research. It does not define or authorize endpoints for trading, payment, publication, user deletion, deployment, or other external consequential actions. Such actions remain separately approval-gated under `AGENTS.md` if they are ever added in the future.
