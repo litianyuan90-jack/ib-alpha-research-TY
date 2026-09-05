@@ -1,4 +1,6 @@
-# IB-Alpha Research Skill v3.0
+# IB-Alpha Research Skill — Canonical
+
+Revision: 2026-09-05
 
 ## Authority
 This is the single canonical source for IB-Alpha equity-research methodology in this repository.
