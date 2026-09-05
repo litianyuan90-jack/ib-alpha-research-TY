@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 @dataclass
 class AgentConfig:
     model: str = os.getenv("OPENAI_MODEL", "gpt-5")
     output_dir: Path = Path("outputs")
     reasoning_effort: str = "medium"
+    enable_web_search: bool = True
