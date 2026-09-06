@@ -1,12 +1,16 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Literal
 from pydantic import BaseModel, Field
+
+ResearchStatus = Literal["COMPLETE", "COMPLETE_WITH_GAPS", "BLOCKED"]
+
 
 class FactsPack(BaseModel):
     company: str
     ticker: str | None = None
     sector: str | None = None
     facts: dict[str, Any] = Field(default_factory=dict)
+
 
 class PeerItem(BaseModel):
     name: str
@@ -15,6 +19,7 @@ class PeerItem(BaseModel):
     pe_ttm: float | None = None
     ev_ebitda: float | None = None
 
+
 class ValuationSnapshot(BaseModel):
     method: str
     summary: str
@@ -22,10 +27,14 @@ class ValuationSnapshot(BaseModel):
     range_base: float | None = None
     range_high: float | None = None
 
+
 class ResearchOutput(BaseModel):
     company: str
     ticker: str | None = None
+    status: ResearchStatus
     executive_summary: str
     body_markdown: str
+    gaps: list[str] = Field(default_factory=list)
+    quality_checks: dict[str, bool] = Field(default_factory=dict)
     valuation_notes: list[ValuationSnapshot] = Field(default_factory=list)
     comparable_notes: str | None = None
